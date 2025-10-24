@@ -1,0 +1,17 @@
+# Database Configuration
+db.url=jdbc:mysql://localhost:3306/banking_simulator
+db.username=root
+db.password=YOUR_MYSQL_PASSWORD_HERE
+db.driver=com.mysql.cj.jdbc.Driver
+
+# Email Configuration (Optional)
+email.smtp.host=smtp.gmail.com
+email.smtp.port=587
+email.from=YOUR_EMAIL@gmail.com
+email.password=YOUR_APP_PASSWORD_HERE
+email.enabled=false
+
+# System Configuration
+system.minimum.balance=500.00
+system.low.balance.threshold=1000.00
+system.critical.balance.threshold=500.00
