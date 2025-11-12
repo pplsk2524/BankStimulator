@@ -1,9 +1,9 @@
 # Banking Transaction Simulator
 
-## Overview  
 The **Banking Transaction Simulator** is a Java-based application designed to simulate basic banking operations in a sandbox environment. It enables users to manage accounts, perform deposits, withdrawals, transfers, and view transaction reports — helping to understand how a simple digital banking platform can work end-to-end.
 
----
+## Objective
+This project aims to create a basic banking transaction simulator using core Java features, including exception handling for error management, collections for account storage, and JDBC for transaction logging. Integrated with text files (simulating Google Sheets) and email APIs for balance alerts, the system will process deposits, withdrawals, and transfers while maintaining account balances. This tool will help users understand banking operations, ensure transaction accuracy, and generate simple reports without advanced financial libraries or AI.
 
 ## Features  
 ### Account Management  
@@ -30,7 +30,6 @@ The **Banking Transaction Simulator** is a Java-based application designed to si
 ### Email Notifications  
 - Sends alerts (for example: low balance notifications) via email  
 
----
 
 ## Setup Instructions  
 ### 1. Clone the repository  
@@ -49,7 +48,8 @@ db.username=YOUR_MYSQL_USERNAME
 db.password=YOUR_MYSQL_PASSWORD  
 # Also configure email settings (SMTP host, port, user, password) as required
 ```
-###3. Database Setup
+
+### 3. Database Setup
 
 In MySQL, create the database:
 ```bash
@@ -58,19 +58,19 @@ CREATE DATABASE banking_simulator;
 
 Run the SQL schema file found in the SQL schema/ directory (or whichever path the schema is in) to create tables and constraints.
 
-###4. Build the project
+### 4. Build the project
 
 Use Maven to build:
 ```bash
 mvn clean install
 ```
-###5. Run the application
+### 5. Run the application
 
 Execute the main class with Maven:
 ```bash
 mvn exec:java -Dexec.mainClass="com.banking.Main"
 ```
-##Project Structure
+## Project Structure
 ``` bash
 BankStimulator/
 │
@@ -87,34 +87,31 @@ BankStimulator/
 │
 └── README.md                # Project documentation  
 ```
-##Requirements
+## Requirements
 
--Java JDK 8 or higher
+- Java JDK 8 or higher
 
--MySQL database
+- MySQL database
 
--Maven build tool
+- Maven build tool
 
-##Important Notes
+## Important Notes
 
--Do not commit your config.properties file — it contains sensitive credentials.
+- Do not commit your config.properties file — it contains sensitive credentials.
 
--This project is for learning and demonstration purposes only.
+- This project is for learning and demonstration purposes only.
 
--You are encouraged to extend and adapt the simulator (for example adding a REST API, GUI, or richer business logic) for your own experimentation.
+- You are encouraged to extend and adapt the simulator (for example adding a REST API, GUI, or richer business logic) for your own experimentation.
 
-##Author
+## Author
 
 Palakurthi Poojitha
+
 GitHub: pplsk2524
+
 Email: pplsk2004@gmail.com
 
-##License
+## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-
----
-
-If you like, I can **generate a `config.properties.example` file** content for you, and also add **badges** (e.g., Maven build status) that you can place at the top of the README for a more professional look. Do you want that?
-::contentReference[oaicite:0]{index=0}
