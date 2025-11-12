@@ -37,39 +37,41 @@ The **Banking Transaction Simulator** is a Java-based application designed to si
 ```bash
 git clone https://github.com/pplsk2524/BankStimulator.git
 cd BankStimulator
-
+```
 ### 2.Configuraton
 Copy the example configuration file:
+```bash
 cp resources/config.properties.example resources/config.properties
-
+```
 Edit resources/config.properties and fill in your MySQL credentials and email configuration:
-
+```bash
 db.username=YOUR_MYSQL_USERNAME  
 db.password=YOUR_MYSQL_PASSWORD  
 # Also configure email settings (SMTP host, port, user, password) as required
-
+```
 ###3. Database Setup
 
 In MySQL, create the database:
-
+```bash
 CREATE DATABASE banking_simulator;
-
+```
 
 Run the SQL schema file found in the SQL schema/ directory (or whichever path the schema is in) to create tables and constraints.
 
 ###4. Build the project
 
 Use Maven to build:
-
+```bash
 mvn clean install
-
+```
 ###5. Run the application
 
 Execute the main class with Maven:
-
+```bash
 mvn exec:java -Dexec.mainClass="com.banking.Main"
-
-Project Structure
+```
+##Project Structure
+``` bash
 BankStimulator/
 │
 ├── src/main/                # Java source code  
@@ -84,35 +86,32 @@ BankStimulator/
 ├── pom.xml                  # Maven project file  
 │
 └── README.md                # Project documentation  
-
+```
 ##Requirements
 
-Java JDK 8 or higher
+-Java JDK 8 or higher
 
-MySQL database
+-MySQL database
 
-Maven build tool
+-Maven build tool
 
 ##Important Notes
 
-Do not commit your config.properties file — it contains sensitive credentials.
+-Do not commit your config.properties file — it contains sensitive credentials.
 
-This project is for learning and demonstration purposes only.
+-This project is for learning and demonstration purposes only.
 
-You are encouraged to extend and adapt the simulator (for example adding a REST API, GUI, or richer business logic) for your own experimentation.
+-You are encouraged to extend and adapt the simulator (for example adding a REST API, GUI, or richer business logic) for your own experimentation.
 
 ##Author
 
 Palakurthi Poojitha
 GitHub: pplsk2524
-
-Email: your-email@example.com
- (replace with your real contact if desired)
+Email: pplsk2004@gmail.com
 
 ##License
 
-This project is licensed under the MIT License. See the LICENSE
- file for details.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
 
 ---
