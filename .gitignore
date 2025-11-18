@@ -37,3 +37,27 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+#my edits
+# Configuration with passwords
+resources/config.properties
+
+# IDE files
+.idea/
+*.iml
+out/
+target/
+
+# Logs
+*.log
+logs/
+
+# Reports (you don't want these)
+reports/
+
+# Unnecessary files
+src/main/java/org/example/Main1.java
+
+# Database
+*.db
+*.sqlite
