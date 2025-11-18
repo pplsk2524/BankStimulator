@@ -4,17 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Database Configuration and Connection Management
- * Now uses external config.properties file for credentials
- */
 public class DatabaseConfig {
 
     private static Connection connection = null;
 
-    /**
-     * Get database connection using external configuration
-     */
     public static Connection getConnection() throws SQLException {
         try {
             if (connection == null || connection.isClosed()) {

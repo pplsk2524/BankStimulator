@@ -5,11 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * Configuration Manager - Simple Version
- * Loads configuration from external properties file
- * Keeps sensitive credentials out of source code
- */
+
 public class ConfigManager {
 
     private static Properties properties;

@@ -1,7 +1,10 @@
 package main.java.com.banking.service;
 
 import main.java.com.banking.model.Account;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,6 +13,8 @@ import java.util.TimerTask;
  * Monitors account balances and sends alerts
  */
 public class BalanceAlertTracker {
+
+    private static final Logger logger = LoggerFactory.getLogger(BalanceAlertTracker.class);
 
     private AccountManager accountManager;
     private EmailService emailService;
@@ -46,18 +51,19 @@ public class BalanceAlertTracker {
             return;
         }
 
-        monitoringTimer = new Timer("BalanceMonitor", true);
+        monitoringTimer = new Timer("BalanceMonitor", true); // daemon thread
 
         monitoringTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                checkAllAccountBalances();
+                checkAllAccountBalancesSilent(); // Use silent version for background
             }
-        }, 0, MONITORING_INTERVAL);
+        }, MONITORING_INTERVAL, MONITORING_INTERVAL); // Start after 1 hour, not immediately
 
         isMonitoring = true;
         System.out.println("✓ Balance monitoring started (checking every " +
                 (MONITORING_INTERVAL / 1000 / 60) + " minutes)");
+        logger.info("Balance monitoring started");
     }
 
     /**
@@ -72,11 +78,13 @@ public class BalanceAlertTracker {
     }
 
     /**
-     * Check all account balances
+     * Check all account balances - WITH console output
      */
     public void checkAllAccountBalances() {
         try {
-            List<Account> accounts = accountManager.getAllAccounts();
+            // Use internal method that doesn't require authentication
+            // This is for background monitoring service
+            List<Account> accounts = accountManager.getAllAccountsInternal();
             int lowBalanceCount = 0;
             int criticalBalanceCount = 0;
 
@@ -102,6 +110,39 @@ public class BalanceAlertTracker {
 
         } catch (Exception e) {
             System.err.println("❌ Error in balance monitoring: " + e.getMessage());
+            logger.error("Error checking account balances", e);
+        }
+    }
+
+    /**
+     * Check all account balances - SILENT (for background monitoring)
+     * No console output, only logs to file
+     */
+    private void checkAllAccountBalancesSilent() {
+        try {
+            List<Account> accounts = accountManager.getAllAccountsInternal();
+            int lowBalanceCount = 0;
+            int criticalBalanceCount = 0;
+
+            logger.info("Background monitoring: Checking {} accounts", accounts.size());
+
+            for (Account account : accounts) {
+                double balance = account.getBalance();
+
+                if (balance < CRITICAL_BALANCE_THRESHOLD) {
+                    sendCriticalBalanceAlertSilent(account);
+                    criticalBalanceCount++;
+                } else if (balance < LOW_BALANCE_THRESHOLD) {
+                    sendLowBalanceAlertSilent(account);
+                    lowBalanceCount++;
+                }
+            }
+
+            logger.info("Background monitoring complete: Low={}, Critical={}",
+                    lowBalanceCount, criticalBalanceCount);
+
+        } catch (Exception e) {
+            logger.error("Error in background balance monitoring", e);
         }
     }
 
@@ -146,6 +187,19 @@ public class BalanceAlertTracker {
     }
 
     /**
+     * Send low balance alert - SILENT (no console output)
+     */
+    private void sendLowBalanceAlertSilent(Account account) {
+        // Send email alert
+        emailService.sendLowBalanceAlert(account, LOW_BALANCE_THRESHOLD);
+
+        // Log alert
+        logAlert(account.getAccountId(), "LOW_BALANCE", account.getBalance());
+        logger.warn("Low balance alert sent for account: {} (Balance: {})",
+                account.getAccountId(), account.getBalance());
+    }
+
+    /**
      * Send critical balance alert
      */
     private void sendCriticalBalanceAlert(Account account) {
@@ -157,6 +211,19 @@ public class BalanceAlertTracker {
 
         // Log alert
         logAlert(account.getAccountId(), "CRITICAL_BALANCE", account.getBalance());
+    }
+
+    /**
+     * Send critical balance alert - SILENT (no console output)
+     */
+    private void sendCriticalBalanceAlertSilent(Account account) {
+        // Send email alert
+        emailService.sendLowBalanceAlert(account, CRITICAL_BALANCE_THRESHOLD);
+
+        // Log alert
+        logAlert(account.getAccountId(), "CRITICAL_BALANCE", account.getBalance());
+        logger.error("Critical balance alert sent for account: {} (Balance: {})",
+                account.getAccountId(), account.getBalance());
     }
 
     /**
@@ -174,20 +241,32 @@ public class BalanceAlertTracker {
      * Get low balance accounts
      */
     public List<Account> getLowBalanceAccounts() {
-        List<Account> allAccounts = accountManager.getAllAccounts();
-        return allAccounts.stream()
-                .filter(acc -> acc.getBalance() < LOW_BALANCE_THRESHOLD)
-                .toList();
+        try {
+            // Use internal method for system service
+            List<Account> allAccounts = accountManager.getAllAccountsInternal();
+            return allAccounts.stream()
+                    .filter(acc -> acc.getBalance() < LOW_BALANCE_THRESHOLD)
+                    .toList();
+        } catch (Exception e) {
+            logger.error("Error getting low balance accounts", e);
+            return new ArrayList<>();
+        }
     }
 
     /**
      * Get critical balance accounts
      */
     public List<Account> getCriticalBalanceAccounts() {
-        List<Account> allAccounts = accountManager.getAllAccounts();
-        return allAccounts.stream()
-                .filter(acc -> acc.getBalance() < CRITICAL_BALANCE_THRESHOLD)
-                .toList();
+        try {
+            // Use internal method for system service
+            List<Account> allAccounts = accountManager.getAllAccountsInternal();
+            return allAccounts.stream()
+                    .filter(acc -> acc.getBalance() < CRITICAL_BALANCE_THRESHOLD)
+                    .toList();
+        } catch (Exception e) {
+            logger.error("Error getting critical balance accounts", e);
+            return new ArrayList<>();
+        }
     }
 
     /**
