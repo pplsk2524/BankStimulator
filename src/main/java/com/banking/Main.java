@@ -480,6 +480,8 @@ public class Main {
                     accountId, holderName, initialBalance, accountType, email, phone
             );
 
+            EmailService.getInstance().sendWelcomeEmail(account);
+
             System.out.println("\n✓ Account created successfully!");
             System.out.println(account);
 
@@ -575,6 +577,8 @@ public class Main {
             transactionManager.deposit(accountId, amount, description);
 
             Account account = accountManager.getAccount(accountId);
+            EmailService.getInstance().sendTransactionAlert(account, "Deposit", amount, account.getBalance());
+
             System.out.println("New Balance: ₹" + String.format("%.2f", account.getBalance()));
 
         } catch (Exception e) {
@@ -627,6 +631,8 @@ public class Main {
             transactionManager.withdraw(accountId, amount, description);
 
             account = accountManager.getAccount(accountId);
+            EmailService.getInstance().sendTransactionAlert(account, "Withdraw", amount, account.getBalance());
+
             System.out.println("New Balance: ₹" + String.format("%.2f", account.getBalance()));
 
         } catch (Exception e) {
@@ -672,6 +678,7 @@ public class Main {
             String toAccountId = scanner.nextLine().trim();
 
             Account fromAccount = accountManager.getAccount(fromAccountId);
+
             System.out.println("Your Balance: ₹" + String.format("%.2f", fromAccount.getBalance()));
 
             double amount = getDoubleInput("Enter transfer amount: ");
@@ -683,6 +690,8 @@ public class Main {
             transactionManager.transfer(fromAccountId, toAccountId, amount, description);
 
             fromAccount = accountManager.getAccount(fromAccountId);
+            EmailService.getInstance().sendTransactionAlert(fromAccount, "Transfer (Debit)", amount, fromAccount.getBalance());
+
             System.out.println("New Balance: ₹" + String.format("%.2f", fromAccount.getBalance()));
 
         } catch (Exception e) {
